@@ -5,36 +5,50 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Sanctum\HasApiTokens;
 use App\Http\Requests\Auth\LoginRequest;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use App\Models\User;
+use Laravel\Sanctum\HasApiTokens;
 
 class LoginController extends Controller
 {
+    
     public function login(LoginRequest $request)
     {
-    //get data
-    $credentials = 
-    [
-        'email' => $request->email,
-        'password' => $request->password,
-    ];
-    //check
-    if(Auth::attempt(['email' => $request-> email , 'password' => $request-> password]))
-    {
-        // $user = Auth::username();
-        // $user ->tokens()->delete();
-        // $success['token'] = $user->createToken(request()->userAgent())->plainTextToken;
-        // $success['username'] = $user->username;
-        // $success['success'] = true;
-        // return response()->json($success,200);
-        //return redirect()->intended('dashboard');
-        return response()->json(['message' => 'Login successful']);
+        
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->password,
+        ];
 
+        try {
+            
+            if ($token = JWTAuth::attempt($credentials)) {
+              
+                $user = Auth::username();
+
+               
+                return response()->json([
+                    'success' => true,
+                    'token' => $token,
+                    'name' => $user->username,
+                ], 200);
+            }
+
+        } catch (JWTException $e) {
+           
+            return response()->json(['error' => 'could_not_create_token'], 500);
+        }
+
+       
+        return response()->json(['error' => 'invalid_credentials'], 401);
     }
-    else
+
+   
+    public function showLoginForm()
     {
-        return response()->json(['error'=>'unautherised'],401);
-    }
+       
+        return response()->json(['message' => 'Please log in to continue']);
     }
 }
-

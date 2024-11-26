@@ -25,4 +25,30 @@ class RegisterController extends Controller
         return response()->json($success, 200);
 
     }
+    
+    // public function login(Request $request)
+    // {
+    //     $credentials = $request->only('email', 'password');
+
+    //     // Attempt to authenticate using the provided credentials
+    //     if (auth()->attempt($credentials)) {
+    //         $user = auth()->user();
+
+    //         // Generate token for authenticated user
+    //         $success['token'] = $user->createToken('user', ['app:all'])->plainTextToken;
+    //         $success['username'] = $user->username;
+    //         $success['success'] = true;
+
+    //         return response()->json($success, 200);
+    //     }
+
+    //     return response()->json(['error' => 'Unauthorized', 'success' => false], 401);
+    // }
+    
+    public function showregisterForm()
+{
+    //return " finally This is the register page"; // Temporary message to verify the method works
+    return User::all();
+   }
 }
+
