@@ -26,7 +26,7 @@ class LoginController extends Controller
             
             if ($token = JWTAuth::attempt($credentials)) {
               
-                $user = Auth::username();
+                $user = Auth::user();
 
                
                 return response()->json([
@@ -49,6 +49,6 @@ class LoginController extends Controller
     public function showLoginForm()
     {
        
-        return response()->json(['message' => 'Please log in to continue']);
+        return response()->json(['message' => 'something is get it']);
     }
 }

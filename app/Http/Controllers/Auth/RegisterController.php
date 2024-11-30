@@ -5,50 +5,56 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-//use Hash;
-use App\Http\Requests\Auth\RegistrationRequest;
-use Illuminate\Support\Facades\Hash as FacadesHash;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
-    public function register(RegistrationRequest $request)
+    /**
+     * Handle user registration.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function register(Request $request)
     {
-        $newuser = $request ->validated();
-        
-        $newuser['password'] = Hash::make($newuser['password']);
+        // Validate the incoming request data
+        $request->validate([
+            'username' => 'required|string|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+        ]);
 
-        $user = User::create($newuser);
-        $success['token'] = $user->createToken('user',['app:all'])->plainTextToken;
-        $success['username'] = $user ->username;
-        $success['success'] = true;
-        return response()->json($success, 200);
+        try {
+            // Create the new user
+            $user = User::create([
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
+            // Generate JWT token for the user
+            $token = JWTAuth::fromUser($user);
+
+            // Return the user data and token
+            return response()->json([
+                'success' => true,
+                'message' => 'Registration successful',
+                'token' => $token,
+                'user' => [
+                    'id' => $user->id,
+                    'username' => $user->username,
+                    'email' => $user->email,
+                ],
+            ], 201);
+        } catch (\Exception $e) {
+            // Handle errors and return a response
+            return response()->json([
+                'success' => false,
+                'message' => 'Registration failed',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
-    
-    // public function login(Request $request)
-    // {
-    //     $credentials = $request->only('email', 'password');
-
-    //     // Attempt to authenticate using the provided credentials
-    //     if (auth()->attempt($credentials)) {
-    //         $user = auth()->user();
-
-    //         // Generate token for authenticated user
-    //         $success['token'] = $user->createToken('user', ['app:all'])->plainTextToken;
-    //         $success['username'] = $user->username;
-    //         $success['success'] = true;
-
-    //         return response()->json($success, 200);
-    //     }
-
-    //     return response()->json(['error' => 'Unauthorized', 'success' => false], 401);
-    // }
-    
-    public function showregisterForm()
-{
-    //return " finally This is the register page"; // Temporary message to verify the method works
-    return User::all();
-   }
 }
-
