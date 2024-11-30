@@ -12,6 +12,6 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        // ضع هنا الـ URIs التي ترغب في استثناءها من تحقق CSRF
+        
     ];
 }
