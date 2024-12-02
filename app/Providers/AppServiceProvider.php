@@ -23,5 +23,6 @@ class AppServiceProvider extends ServiceProvider
     {
         
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
+        Schema::defaultStringLength(191);
     }
 }
