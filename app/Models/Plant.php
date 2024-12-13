@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Plant extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'scientific_name', 
         'common_name', 

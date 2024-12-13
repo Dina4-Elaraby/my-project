@@ -12,11 +12,31 @@ return [
     | as required, but they're a perfect start for most applications.
     |
     */
-
-    'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
+    'defaults' => 
+    [
+    'guard' => env('AUTH_GUARD', 'api'), // اجعل api الحارس الافتراضي
+    'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
+    
+
+    'defaults' => 
+    [
+    'guard' => 'api',
+    'passwords' => 'users',
+    ],
+    'guards' => 
+    [
+    'api' =>
+     [
+        'driver' => 'jwt',
+        'provider' => 'users',
+     ],
+    ],
+
+    // 'defaults' => [
+    //     'guard' => 'api',
+    //     'passwords' => 'users',
+    // ],
 
     /*
     |--------------------------------------------------------------------------
@@ -42,8 +62,9 @@ return [
     
         'api'=>
         [
-            'driver'=>'jwt',
+            
             'provider'=>'users',
+            //'hash'=>false
         ]
     ],
 
@@ -69,7 +90,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => App\Models\User::class,
         ],
 
         // 'users' => [
@@ -118,5 +139,7 @@ return [
     */
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
+
+    
 
 ];

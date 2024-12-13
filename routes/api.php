@@ -1,59 +1,57 @@
 <?php
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlantController;
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+use App\Http\Controllers\TreatmentController;
 
-Route::post('/tokens/create', function (Request $request) {
+
+use App\Models\Plant;
+
+Route::post('/tokens/create', function (Request $request) 
+{ 
     $request->validate([
         'token_username' => 'required|string|max:255',
     ]);
 
     $token = $request->user()->createToken($request->token_username);
 
-    return ['token' => $token->plainTextToken];
-
-
-    Route::middleware('mymiddleware')->get('/example', function () 
-    {
-        return 'This route uses MyMiddleware!';
-    });
-
-
+    return ['token' => $token->plainTextToken];    
     
 
 });
 
-Route::post('register',[RegisterController::class, 'register']);
-Route::post('login',[loginController::class, 'login']);
+Route::group([
 
-Route::get('/login', [LoginController::class, 'showLoginForm']);
-Route::post('/register', [RegisterController::class, 'register']);
+    'middleware' => 'api',
+    'prefix' => 'auth'
 
+], function ($router) {
 
+    Route::post('register', 'AuthController@register');
+    Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('me', 'AuthController@me');
 
-
-Route::middleware('auth:api')->get('/user', function (Request $request) 
-{
-    return $request->user();
 });
 
 
 
-Route::resource('plants', PlantController::class);
-Route::get('/plants/search', [PlantController::class, 'search']);
-use App\Http\Controllers\DiseaseController;
 
+ 
+ 
+
+
+use App\Http\Controllers\DiseaseController;
 Route::get('/diseases', [DiseaseController::class, 'index']);
 Route::post('/diseases', [DiseaseController::class, 'store']);
+Route::get('/diseases/{id}', [DiseaseController::class, 'searchById']);
 Route::delete('diseases/{id}', [DiseaseController::class, 'destroy']);
-use App\Http\Controllers\TreatmentController;
 
-Route::get('treatments', [TreatmentController::class, 'index']);
-Route::post('treatments', [TreatmentController::class, 'store']);
-Route::delete('treatments/{id}', [TreatmentController::class, 'destroy']); 
+
+Route::resource('treatments', TreatmentController::class)->except(['create' , 'edit']);
+Route::resource('plants', PlantController::class)->except(['create' , 'edit']);
+

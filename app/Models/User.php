@@ -1,28 +1,23 @@
 <?php
 
 namespace App\Models\User;
-
+namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Laravel\Sanctum\HasApiTokens;
-
-namespace App\Models;
-
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+// use Illuminate\Foundation\Auth\User as Authenticatable;
+// use Laravel\Sanctum\HasApiTokens;
+// use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class User extends Authenticatable implements JWTSubject
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable , HasApiTokens;
+    
+    use HasFactory, Notifiable ;
 
     /**
      * The attributes that are mass assignable.
@@ -33,6 +28,7 @@ class User extends Authenticatable implements JWTSubject
         'username',
         'email',
         'password',
+        'status',
     ];
 
     /**
@@ -67,10 +63,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
-    public function getAuthIdentifierName()
-{
-    return 'username';
-}
+//     public function getAuthIdentifierName()
+// {
+//     return 'username';
+// }
+
+
 
 }
 

@@ -1,43 +1,84 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Treatment;
+
 use Illuminate\Http\Request;
+use App\Models\Treatment;
+
 
 class TreatmentController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        return response()->json(Treatment::all());
+      return Treatment::all();
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-        ]);
-
-        $treatment = Treatment::create($validatedData);
-
-        return response()->json($treatment, 201); // إرجاع السجل الذي تم إنشاؤه مع كود حالة HTTP 201
+        $treatment = Treatment::create ($request->all());
+        return response()->json($treatment,201);
     }
 
-    public function destroy($id)
-{
-    // Find the treatment by ID
-    $treatment = Treatment::find($id);
-
-    // Check if the treatment exists
-    if (!$treatment) {
-        return response()->json(['message' => 'Treatment not found'], 404);
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $treatment = Treatment::find ($id);
+        if(!$treatment)
+        {
+            return response()->json(['message'=>"Treatment not found "],404);
+        }
+        return $treatment;
     }
 
-    // Delete the treatment
-    $treatment->delete();
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
 
-    // Return a success response
-    return response()->json(['message' => 'Treatment deleted successfully'], 200);
-}
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        $treatment = Treatment::find ($id);
+        if(!$treatment)
+        {
+            return response()->json(['message'=>"Treatment not found "],404);
+        }
+        $treatment ->update($request->all());
+        return response()->json($treatment,200);
+    }
 
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        $treatment = Treatment::find ($id);
+        if(!$treatment)
+        {
+            return response()->json(['message'=>"Treatment not found "],404);
+        }
+        $treatment ->delete();
+        return response()->json(['message'=>'The Treatment is deleted'],200);
+    }
 }

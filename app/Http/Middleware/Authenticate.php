@@ -18,7 +18,7 @@ class Authenticate
      */
     public function handle(Request $request, Closure $next, ...$guards)
     {
-        if (Auth::guard()->guest()) {
+        if (Auth::guard('api')->guest()) {
             
             return redirect()->route('login');
         }
