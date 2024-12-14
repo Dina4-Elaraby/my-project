@@ -127,7 +127,13 @@ return [
     
 'providers' => [
     Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+    Illuminate\Filesystem\FilesystemServiceProvider::class,
+    App\Providers\AppServiceProvider::class,
 ],
 
+'aliases' => [
+    // Other Aliases...
+    'Auth' => Illuminate\Support\Facades\Auth::class,
+],
 
 ];

@@ -7,6 +7,9 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Sanctum\PersonalAccessToken;
 use Laravel\Sanctum\Sanctum;
+//use Illuminate\Foundation\Support\Providers\AppServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
+
 
 
 
@@ -27,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
     {
         
         Schema::defaultStringLength(191);
-        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
+       
     }
 
     
